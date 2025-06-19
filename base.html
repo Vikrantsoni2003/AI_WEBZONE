@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Tools Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+</head>
+<body>
+    <!-- Enhanced Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="{{ url_for('home') }}" class="logo">
+                    <div class="logo-icon">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="14" fill="url(#gradient1)"/>
+                            <circle cx="12" cy="12" r="2" fill="white"/>
+                            <circle cx="20" cy="12" r="2" fill="white"/>
+                            <path d="M10 20 Q16 24 22 20" stroke="white" stroke-width="2" fill="none"/>
+                            <defs>
+                                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00ffff"/>
+                                    <stop offset="100%" style="stop-color:#0080ff"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-main">AI Tools</span>
+                        <span class="logo-sub">Dashboard</span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="nav-center">
+                <div class="nav-links">
+                    <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">
+                        <span class="nav-icon">🏠</span>
+                        <span>Home</span>
+                    </a>
+                    <a href="{{ url_for('tools') }}" class="nav-link {% if request.endpoint == 'tools' %}active{% endif %}">
+                        <span class="nav-icon">🛠️</span>
+                        <span>Tools</span>
+                        <span class="nav-badge">285+</span>
+                    </a>
+                    <a href="{{ url_for('prompts') }}" class="nav-link {% if request.endpoint == 'prompts' %}active{% endif %}">
+                        <span class="nav-icon">💡</span>
+                        <span>Prompts</span>
+                    </a>
+                    <a href="{{ url_for('tutorials') }}" class="nav-link {% if request.endpoint == 'tutorials' %}active{% endif %}">
+                        <span class="nav-icon">🎓</span>
+                        <span>Tutorials</span>
+                        <span class="nav-badge">20</span>
+                    </a>
+                    <a href="{{ url_for('chat') }}" class="nav-link {% if request.endpoint == 'chat' %}active{% endif %}">
+                        <span class="nav-icon">💬</span>
+                        <span>AI Chat</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                {% if user_info %}
+                    <div class="user-menu">
+                        <div class="user-avatar">
+                            <span>{{ user_info.username[0].upper() }}</span>
+                        </div>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <span class="username">{{ user_info.username }}</span>
+                                <span class="user-role role-{{ user_info.role }}">{{ user_info.role.title() }}</span>
+                            </div>
+                            <div class="dropdown-menu">
+                                <a href="{{ url_for('profile') }}" class="dropdown-item">
+                                    <span>👤</span> Profile
+                                </a>
+                                {% if user_info.role == 'normal' %}
+                                <a href="{{ url_for('upgrade_to_pro') }}" class="dropdown-item upgrade-item">
+                                    <span>⭐</span> Upgrade to Pro
+                                </a>
+                                {% endif %}
+                                <a href="{{ url_for('feedback') }}" class="dropdown-item">
+                                    <span>📝</span> Feedback
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url_for('logout') }}" class="dropdown-item logout-item">
+                                    <span>🚪</span> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="auth-buttons">
+                        <a href="{{ url_for('login') }}" class="btn btn-outline btn-small">Login</a>
+                        <a href="{{ url_for('signup') }}" class="btn btn-primary btn-small">Sign Up</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                        <span class="flash-close">&times;</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Chatbot Button -->
+    {% if user_info %}
+    <div class="chatbot-container">
+        <a href="{{ url_for('chat') }}" class="chatbot-btn" title="AI Assistant">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 13.54 2.36 14.99 3.01 16.28L2 22L7.72 20.99C9.01 21.64 10.46 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="currentColor"/>
+                <circle cx="9" cy="12" r="1" fill="white"/>
+                <circle cx="15" cy="12" r="1" fill="white"/>
+                <circle cx="12" cy="12" r="1" fill="white"/>
+            </svg>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>AI Tools Dashboard</h4>
+                <p>Discover 285+ AI tools across 15+ categories to supercharge your productivity.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <div class="footer-links">
+                    <a href="{{ url_for('tools') }}">Browse Tools</a>
+                    <a href="{{ url_for('prompts') }}">AI Prompts</a>
+                    <a href="{{ url_for('tutorials') }}">Tutorials</a>
+                    <a href="{{ url_for('feedback') }}">Feedback</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <div class="footer-links">
+                    <a href="{{ url_for('chat') }}">AI Assistant</a>
+                    <a href="{{ url_for('feedback') }}">Contact Us</a>
+                    {% if not user_info or user_info.role == 'normal' %}
+                    <a href="{{ url_for('upgrade_to_pro') }}">Upgrade to Pro</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AI Tools Dashboard. Built with Flask & Gemini AI.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Flash message close functionality
+        document.querySelectorAll('.flash-close').forEach(function(closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                this.parentElement.style.display = 'none';
+            });
+        });
+
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            document.querySelectorAll('.flash-message').forEach(function(msg) {
+                msg.style.opacity = '0';
+                setTimeout(function() {
+                    msg.style.display = 'none';
+                }, 300);
+            });
+        }, 5000);
+
+        // User dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenu = document.querySelector('.user-menu');
+            if (userMenu) {
+                userMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('active');
+                });
+
+                document.addEventListener('click', function() {
+                    userMenu.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

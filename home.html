@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}AI Tools Dashboard - Discover 285+ AI Tools{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Discover the Best AI Tools</h1>
+        <p class="hero-subtitle">285+ curated AI tools across 15+ categories to supercharge your productivity</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('tools') }}" class="btn btn-primary">Explore Tools</a>
+            <a href="{{ url_for('chat') }}" class="btn btn-secondary">Ask AI Assistant</a>
+        </div>
+    </div>
+</div>
+
+<!-- User Status -->
+{% if user_info %}
+<div class="user-status">
+    <div class="container">
+        <div class="status-card">
+            <h3>Welcome back, {{ user_info.username }}! 👋</h3>
+            <p>Role: <span class="role-badge role-{{ user_info.role }}">{{ user_info.role.title() }}</span></p>
+            {% if user_info.role == 'normal' %}
+            <form action="{{ url_for('upgrade_to_pro') }}" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-upgrade">Upgrade to Pro ⭐</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Featured Tools -->
+<section class="featured-section">
+    <div class="container">
+        <h2 class="section-title">Featured AI Tools</h2>
+        <div class="tools-grid">
+            {% for name, url, description, category in featured_tools %}
+            <div class="tool-card">
+                <div class="tool-header">
+                    <h3 class="tool-name">{{ name }}</h3>
+                    <span class="tool-category">{{ category }}</span>
+                </div>
+                <p class="tool-description">{{ description }}</p>
+                <div class="tool-actions">
+                    <a href="{{ url }}" target="_blank" class="btn btn-small">Visit Tool</a>
+                    {% if user_info %}
+                    <form action="{{ url_for('toggle_favorite') }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="tool_name" value="{{ name }}">
+                        <input type="hidden" name="category" value="{{ category }}">
+                        <button type="submit" class="btn btn-small btn-outline">❤️ Favorite</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">285+</div>
+                <div class="stat-label">AI Tools</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">AI Prompts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">AI Assistant</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Preview -->
+<section class="categories-section">
+    <div class="container">
+        <h2 class="section-title">Browse by Category</h2>
+        <div class="categories-grid">
+            <a href="{{ url_for('tools', category='image') }}" class="category-card">
+                <div class="category-icon">🎨</div>
+                <h3>Image Tools</h3>
+                <p>AI-powered image generation, editing, and enhancement</p>
+            </a>
+            <a href="{{ url_for('tools', category='video') }}" class="category-card">
+                <div class="category-icon">🎬</div>
+                <h3>Video Tools</h3>
+                <p>Create and edit videos with AI assistance</p>
+            </a>
+            <a href="{{ url_for('tools', category='text') }}" class="category-card">
+                <div class="category-icon">✍️</div>
+                <h3>Text Tools</h3>
+                <p>AI writing assistants and content generation</p>
+            </a>
+            <a href="{{ url_for('tools', category='business') }}" class="category-card">
+                <div class="category-icon">💼</div>
+                <h3>Business Tools</h3>
+                <p>Streamline workflows and boost productivity</p>
+            </a>
+            <a href="{{ url_for('tools', category='education') }}" class="category-card">
+                <div class="category-icon">📚</div>
+                <h3>Education Tools</h3>
+                <p>AI-powered learning and teaching assistance</p>
+            </a>
+            <a href="{{ url_for('tools', category='marketing') }}" class="category-card">
+                <div class="category-icon">📈</div>
+                <h3>Marketing Tools</h3>
+                <p>AI-driven marketing and social media tools</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Ready to Explore AI Tools?</h2>
+            <p>Join thousands of users discovering the perfect AI tools for their needs</p>
+            {% if not user_info %}
+            <div class="cta-buttons">
+                <a href="{{ url_for('signup') }}" class="btn btn-primary">Sign Up Free</a>
+                <a href="{{ url_for('tools') }}" class="btn btn-outline">Browse Tools</a>
+            </div>
+            {% else %}
+            <div class="cta-buttons">
+                <a href="{{ url_for('tools') }}" class="btn btn-primary">Browse All Tools</a>
+                <a href="{{ url_for('prompts') }}" class="btn btn-outline">View Prompts</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

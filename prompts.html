@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}AI Prompts Library - 50+ Prompts{% endblock %}
+
+{% block content %}
+<div class="prompts-header">
+    <div class="container">
+        <h1 class="page-title">AI Prompts Library</h1>
+        <p class="page-subtitle">50+ carefully crafted prompts to get the most out of AI tools</p>
+    </div>
+</div>
+
+<div class="prompts-content">
+    <div class="container">
+        {% for category, prompts in prompt_categories.items() %}
+        <div class="prompt-category">
+            <h2 class="category-title">{{ category }}</h2>
+            <div class="prompts-list">
+                {% for prompt in prompts %}
+                <div class="prompt-card">
+                    <p class="prompt-text">{{ prompt }}</p>
+                    <button class="btn btn-small btn-outline copy-prompt">Copy Prompt</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+// Copy prompt functionality
+document.querySelectorAll('.copy-prompt').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        const promptText = this.previousElementSibling.textContent;
+        navigator.clipboard.writeText(promptText).then(function() {
+            btn.textContent = 'Copied!';
+            btn.classList.add('btn-success');
+            setTimeout(function() {
+                btn.textContent = 'Copy Prompt';
+                btn.classList.remove('btn-success');
+            }, 2000);
+        });
+    });
+});
+</script>
+{% endblock %}

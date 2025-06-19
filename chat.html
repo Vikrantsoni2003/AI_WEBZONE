@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}AI Assistant - Chat{% endblock %}
+
+{% block content %}
+<div class="chat-header">
+    <div class="container">
+        <h1 class="page-title">AI Assistant</h1>
+        <p class="page-subtitle">Ask me anything about AI tools! I know about 285+ tools across 15+ categories.</p>
+    </div>
+</div>
+
+<div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+        {% if not chat_history %}
+        <div class="message bot-message">
+            <div class="message-content">
+                <strong>🤖 AI Assistant:</strong><br>
+                Hello! I'm your AI Tool Assistant. I can help you find the perfect AI tools for your needs. Try asking me:<br><br>
+                • "What are the best image editing AI tools?"<br>
+                • "I need help with video creation"<br>
+                • "Show me marketing tools with high ratings"<br>
+                • "Compare ChatGPT with other text AI tools"
+            </div>
+        </div>
+        {% endif %}
+        
+        {% for message, response, timestamp in chat_history %}
+        <div class="message user-message">
+            <div class="message-content">
+                <strong>You:</strong><br>{{ message }}
+            </div>
+            <div class="message-time">{{ timestamp }}</div>
+        </div>
+        <div class="message bot-message">
+            <div class="message-content">
+                <strong>🤖 AI Assistant:</strong><br>{{ response }}
+            </div>
+            <div class="message-time">{{ timestamp }}</div>
+        </div>
+        {% endfor %}
+        
+        {% if latest_message and latest_response %}
+        <div class="message user-message">
+            <div class="message-content">
+                <strong>You:</strong><br>{{ latest_message }}
+            </div>
+        </div>
+        <div class="message bot-message">
+            <div class="message-content">
+                <strong>🤖 AI Assistant:</strong><br>{{ latest_response }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="chat-input-container">
+        <form method="POST" class="chat-form">
+            <div class="chat-input-group">
+                <input type="text" name="message" placeholder="Ask me anything about AI tools..." class="chat-input" required>
+                <button type="submit" class="btn btn-primary">Send 📤</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Auto-scroll to bottom of chat
+function scrollToBottom() {
+    const chatMessages = document.getElementById('chat-messages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Scroll to bottom on page load
+window.addEventListener('load', scrollToBottom);
+
+// Focus on input
+document.querySelector('.chat-input').focus();
+</script>
+{% endblock %}

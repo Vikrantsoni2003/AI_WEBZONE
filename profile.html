@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - {{ user_info.username }}{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+    <div class="container">
+        <h1 class="page-title">User Profile</h1>
+        <div class="profile-info">
+            <h2>Welcome, {{ user_info.username }}! 👋</h2>
+            <p><strong>Email:</strong> {{ user_info.email }}</p>
+            <p><strong>Role:</strong> <span class="role-badge role-{{ user_info.role }}">{{ user_info.role.title() }}</span></p>
+            
+            {% if user_info.role == 'normal' %}
+            <form action="{{ url_for('upgrade_to_pro') }}" method="POST" class="upgrade-form">
+                <button type="submit" class="btn btn-upgrade">Upgrade to Pro ⭐</button>
+                <p class="upgrade-benefits">Get unlimited tutorial access and exclusive features!</p>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="profile-content">
+    <div class="container">
+        <!-- User Stats -->
+        <div class="stats-section">
+            <h3>Your Activity</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.favorites }}</div>
+                    <div class="stat-label">Favorite Tools</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.chats }}</div>
+                    <div class="stat-label">Chat Interactions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.feedback }}</div>
+                    <div class="stat-label">Feedback Submitted</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Favorite Tools -->
+        <div class="favorites-section">
+            <h3>Your Favorite Tools</h3>
+            {% if user_favorites %}
+            <div class="favorites-grid">
+                {% for tool_name, category in user_favorites %}
+                <div class="favorite-item">
+                    <div class="favorite-info">
+                        <h4>{{ tool_name }}</h4>
+                        <span class="favorite-category">{{ category }}</span>
+                    </div>
+                    <form action="{{ url_for('toggle_favorite') }}" method="POST">
+                        <input type="hidden" name="tool_name" value="{{ tool_name }}">
+                        <input type="hidden" name="category" value="{{ category }}">
+                        <button type="submit" class="btn btn-small btn-outline">Remove</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-favorites">
+                <p>You haven't added any favorites yet.</p>
+                <a href="{{ url_for('tools') }}" class="btn btn-primary">Explore Tools</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

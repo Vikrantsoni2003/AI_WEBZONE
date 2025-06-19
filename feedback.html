@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback - AI Tools Dashboard{% endblock %}
+
+{% block content %}
+<div class="feedback-header">
+    <div class="container">
+        <h1 class="page-title">Feedback & Suggestions</h1>
+        <p class="page-subtitle">Help us improve! Share your thoughts and suggestions.</p>
+    </div>
+</div>
+
+<div class="feedback-content">
+    <div class="container">
+        <div class="feedback-form-container">
+            <form method="POST" class="feedback-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" {% if user_info %}value="{{ user_info.username }}"{% endif %} required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" {% if user_info %}value="{{ user_info.email }}"{% endif %} required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rating">Overall Rating</label>
+                    <div class="rating-input">
+                        <input type="range" id="rating" name="rating" min="1" max="5" value="5">
+                        <span id="rating-value">5</span> ⭐
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Your Feedback</label>
+                    <textarea id="message" name="message" rows="6" placeholder="Please share your thoughts, suggestions, or report any issues..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-large">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Rating slider
+const ratingSlider = document.getElementById('rating');
+const ratingValue = document.getElementById('rating-value');
+
+ratingSlider.addEventListener('input', function() {
+    ratingValue.textContent = this.value;
+});
+</script>
+{% endblock %}

@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}Upgrade to Pro - AI Tools Dashboard{% endblock %}
+
+{% block content %}
+<div class="upgrade-container">
+    <div class="upgrade-header">
+        <h1 class="upgrade-title">Upgrade to Pro</h1>
+        <p class="upgrade-subtitle">Unlock unlimited access and premium features</p>
+    </div>
+
+    <div class="pricing-container">
+        <div class="pricing-cards">
+            <!-- Monthly Plan -->
+            <div class="pricing-card">
+                <div class="plan-header">
+                    <h3 class="plan-name">Monthly Pro</h3>
+                    <div class="plan-price">
+                        <span class="currency">₹</span>
+                        <span class="amount">49</span>
+                        <span class="period">/month</span>
+                    </div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Unlimited tutorial access</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>No ads required</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Priority AI chat support</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Advanced AI prompts library</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Early access to new tools</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Export favorites and data</span>
+                    </div>
+                </div>
+                <button class="plan-button" onclick="selectPlan('monthly')">Choose Monthly</button>
+            </div>
+
+            <!-- Yearly Plan (Popular) -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan-header">
+                    <h3 class="plan-name">Yearly Pro</h3>
+                    <div class="plan-price">
+                        <span class="currency">₹</span>
+                        <span class="amount">399</span>
+                        <span class="period">/year</span>
+                    </div>
+                    <div class="savings">Save ₹189 (32% off)</div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Everything in Monthly Pro</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Exclusive yearly bonuses</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>1-on-1 AI consultation call</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Custom AI workflow setup</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Premium community access</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Monthly AI trends report</span>
+                    </div>
+                </div>
+                <button class="plan-button" onclick="selectPlan('yearly')">Choose Yearly</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="payment-section" id="payment-section" style="display: none;">
+        <div class="payment-container">
+            <h2 class="payment-title">Complete Your Purchase</h2>
+            <div class="selected-plan" id="selected-plan"></div>
+            
+            <form method="POST" action="{{ url_for('process_payment') }}" class="payment-form">
+                <input type="hidden" name="plan_type" id="plan_type">
+                
+                <div class="payment-methods">
+                    <h3>Payment Method</h3>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="credit_card" checked>
+                            <div class="option-content">
+                                <span class="option-icon">💳</span>
+                                <span>Credit/Debit Card</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="paypal">
+                            <div class="option-content">
+                                <span class="option-icon">🅿️</span>
+                                <span>PayPal</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="apple_pay">
+                            <div class="option-content">
+                                <span class="option-icon">🍎</span>
+                                <span>Apple Pay</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="google_pay">
+                            <div class="option-content">
+                                <span class="option-icon">🔵</span>
+                                <span>Google Pay</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card-details" id="card-details">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="text" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="text" placeholder="123" maxlength="4">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cardholder Name</label>
+                            <input type="text" placeholder="John Doe">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="billing-info">
+                    <h3>Billing Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" value="{{ user_info.email }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select>
+                                <option>India</option>
+                                <option>Canada</option>
+                                <option>United Kingdom</option>
+                                <option>Australia</option>
+                                <option>Germany</option>
+                                <option>France</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$49.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax:</span>
+                        <span id="tax">₹0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span id="total">₹49.00</span>
+                    </div>
+                </div>
+
+                <div class="payment-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hidePay ment()">Back to Plans</button>
+                    <button type="submit" class="btn btn-primary btn-large">Complete Purchase</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Features Comparison -->
+    <div class="features-comparison">
+        <h2>Why Upgrade to Pro?</h2>
+        <div class="comparison-table">
+            <div class="comparison-header">
+                <div class="feature-col">Features</div>
+                <div class="plan-col">Free</div>
+                <div class="plan-col">Pro</div>
+            </div>
+            <div class="comparison-row">
+                <div class="feature-col">AI Tools Directory</div>
+                <div class="plan-col">✅ 285+ tools</div>
+                <div class="plan-col">✅ 285+ tools</div>
+            </div>
+            <div class="comparison-row">
+                <div class="feature-col">AI Prompts Library</div>
+                <div class="plan-col">✅ Basic prompts</div>
+                <div class="plan-col">✅ Advanced prompts</div>
+            </div>
+            <div class="comparison-row">
+                <div class="feature-col">Tutorial Access</div>
+                <div class="plan-col">⏰ 1 hour after ads</div>
+                <div class="plan-col">✅ Unlimited</div>
+            </div>
+            <div class="comparison-row">
+                <div class="feature-col">AI Chat Assistant</div>
+                <div class="plan-col">✅ Basic</div>
+                <div class="plan-col">✅ Priority support</div>
+            </div>
+            <div class="comparison-row">
+                <div class="feature-col">Favorites & Export</div>
+                <div class="plan-col">✅ Basic</div>
+                <div class="plan-col">✅ Advanced + Export</div>
+            </div>
+            <div class="comparison-row">
+                <div class="feature-col">Early Access</div>
+                <div class="plan-col">❌</div>
+                <div class="plan-col">✅ New tools first</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectPlan(planType) {
+    const planDetails = {
+        'monthly': {
+            name: 'Monthly Pro',
+            price: '₹49.00',
+            period: '/month'
+        },
+        'yearly': {
+            name: 'Yearly Pro', 
+            price: '₹399.00',
+            period: '/year'
+        }
+    };
+    
+    const plan = planDetails[planType];
+    document.getElementById('plan_type').value = planType;
+    document.getElementById('selected-plan').innerHTML = `
+        <div class="selected-plan-info">
+            <h3>${plan.name}</h3>
+            <div class="selected-price">${plan.price}${plan.period}</div>
+        </div>
+    `;
+    
+    // Update payment summary
+    const amount = planType === 'monthly' ? 49.00 : 399.00;
+    document.getElementById('subtotal').textContent = `$${amount.toFixed(2)}`;
+    document.getElementById('total').textContent = `$${amount.toFixed(2)}`;
+    
+    document.getElementById('payment-section').style.display = 'block';
+    document.getElementById('payment-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function hidePayment() {
+    document.getElementById('payment-section').style.display = 'none';
+}
+
+// Payment method toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+    const cardDetails = document.getElementById('card-details');
+    
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', function() {
+            if (this.value === 'credit_card') {
+                cardDetails.style.display = 'block';
+            } else {
+                cardDetails.style.display = 'none';
+            }
+        });
+    });
+    
+    // Card number formatting
+    const cardInput = document.querySelector('input[placeholder="1234 5678 9012 3456"]');
+    if (cardInput) {
+        cardInput.addEventListener('input', function() {
+            let value = this.value.replace(/\s/g, '');
+            let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+            this.value = formattedValue;
+        });
+    }
+    
+    // Expiry date formatting
+    const expiryInput = document.querySelector('input[placeholder="MM/YY"]');
+    if (expiryInput) {
+        expiryInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            this.value = value;
+        });
+    }
+});
+</script>
+{% endblock %}

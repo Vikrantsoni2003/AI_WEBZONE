@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Watch Ad - Unlock Tutorials{% endblock %}
+
+{% block content %}
+<div class="ad-container">
+    <div class="ad-content">
+        <h1 class="ad-title">Unlock Tutorials</h1>
+        <p class="ad-subtitle">Watch this short ad to access tutorials for 1 hour</p>
+        
+        <div class="ad-simulation">
+            <div class="ad-video">
+                <div class="ad-placeholder">
+                    <h2>🎬 Advertisement</h2>
+                    <p>AI Tools are revolutionizing productivity...</p>
+                    <div class="ad-timer">
+                        <span id="timer">30</span> seconds remaining
+                    </div>
+                </div>
+            </div>
+            
+            <form id="ad-form" action="{{ url_for('ad_complete') }}" method="POST" style="display: none;">
+                <button type="submit" class="btn btn-primary btn-large">Continue to Tutorials</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Ad timer simulation
+let timeLeft = 30;
+const timerElement = document.getElementById('timer');
+const adForm = document.getElementById('ad-form');
+
+const countdown = setInterval(function() {
+    timeLeft--;
+    timerElement.textContent = timeLeft;
+    
+    if (timeLeft <= 0) {
+        clearInterval(countdown);
+        document.querySelector('.ad-placeholder').style.display = 'none';
+        adForm.style.display = 'block';
+    }
+}, 1000);
+</script>
+{% endblock %}

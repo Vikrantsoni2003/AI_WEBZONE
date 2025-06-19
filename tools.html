@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}AI Tools Directory - 285+ Tools{% endblock %}
+
+{% block content %}
+<div class="tools-header">
+    <div class="container">
+        <h1 class="page-title">AI Tools Directory</h1>
+        <p class="page-subtitle">Discover 285+ AI tools across 15+ categories</p>
+        
+        <!-- Search and Filter -->
+        <div class="tools-filters">
+            <form method="GET" class="filter-form">
+                <div class="search-group">
+                    <input type="text" name="search" placeholder="Search tools..." value="{{ search_query }}" class="search-input">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+                
+                <div class="category-filter">
+                    <select name="category" class="category-select">
+                        <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.lower() }}" {% if category_filter == category.lower() %}selected{% endif %}>{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-secondary">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="tools-content">
+    <div class="container">
+        {% if search_query %}
+        <div class="search-results">
+            <h2>Search Results for "{{ search_query }}"</h2>
+            <p>Found {{ tools|length }} tool(s)</p>
+        </div>
+        {% endif %}
+        
+        {% if tools %}
+        <div class="tools-grid">
+            {% for tool in tools %}
+            <div class="tool-card">
+                <div class="tool-header">
+                    <h3 class="tool-name">{{ tool.name }}</h3>
+                    <span class="tool-category">{{ tool.category }}</span>
+                </div>
+                <p class="tool-description">{{ tool.description }}</p>
+                <div class="tool-actions">
+                    <a href="{{ tool.url }}" target="_blank" class="btn btn-primary btn-small">Visit Tool</a>
+                    {% if user_info %}
+                    <form action="{{ url_for('toggle_favorite') }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="tool_name" value="{{ tool.name }}">
+                        <input type="hidden" name="category" value="{{ tool.category }}">
+                        <button type="submit" class="btn btn-small {% if tool.is_favorite %}btn-favorite{% else %}btn-outline{% endif %}">
+                            {% if tool.is_favorite %}❤️ Favorited{% else %}🤍 Favorite{% endif %}
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <h2>No tools found</h2>
+            <p>Try adjusting your search or filter criteria</p>
+            <a href="{{ url_for('tools') }}" class="btn btn-primary">View All Tools</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

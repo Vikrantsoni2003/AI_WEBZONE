@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if form_type == 'signup' %}Sign Up{% else %}Login{% endif %} - AI Tools Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        {% if form_type == 'signup' %}
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Join the AI Tools community</p>
+        
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+        </form>
+        
+        <p class="auth-switch">
+            Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+        </p>
+        
+        {% else %}
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Login to your account</p>
+        
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full">Login</button>
+        </form>
+        
+        <p class="auth-switch">
+            Don't have an account? <a href="{{ url_for('signup') }}">Sign up here</a>
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
